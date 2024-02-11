@@ -1,0 +1,32 @@
+[mygroup]
+127.0.0.1 ansible_port=2222 ansible_user=root ansible_ssh_pass=your_password
+
+
+all:
+  children:
+    webservers:
+      hosts:
+        web1.example.com:
+        web2.example.com:
+    dbservers:
+      hosts:
+        db1.example.com:
+        db2.example.com:
+
+
+[webservers]
+web1.example.com http_port=80 max_requests_per_child=300
+web2.example.com http_port=303 max_requests_per_child=500
+
+[dbservers]
+db1.example.com ansible_host=192.0.2.50 ansible_user=myuser
+db2.example.com ansible_host=192.0.2.51 ansible_user=myuser
+
+
+[webservers]
+web1.example.com
+web2.example.com
+
+[dbservers]
+db1.example.com
+db2.example.com
