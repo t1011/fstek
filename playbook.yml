@@ -1,1 +1,34 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Создание файла конфигурации sysctl
+      copy:
+        dest: /etc/sysctl.d/77-fstek.conf
+        content: |
+          kernel.dmesg_restrict=1
+          kernel.kptr_restrict=2
+          net.core.bpf_jit_harden=2
+          kernel.perf_event_paranoid=3
+          kernel.kexec_load_disabled=1
+          user.max_user_namespaces=0
+          vm.mmap_min_addr=4096
+          kernel.randomize_va_space=2
+          kernel.yama.ptrace_scope=3
+          fs.protected_symlinks=1
+          fs.protected_hardlinks=1
+          fs.suid_dumpable=0
 
+    - name: Применение параметров sysctl
+      command: sysctl -p /etc/sysctl.d/77-fstek.conf
+
+    - name: Добавление параметров в файл /etc/default/grub
+      lineinfile:
+        path: /etc/default/grub
+        line: 'GRUB_CMDLINE_LINUX="vsyscall=none tsx=off init_on_alloc=1 slab_nomerge iommu=force iommu.strict=1 iommu.passthrough=0 mitigations=auto,nosmt debugfs=no-mount"'
+        backrefs: yes
+        regexp: '^GRUB_CMDLINE_LINUX="(.*)"$'
+        state: present
+
+    - name: Обновление конфигурации GRUB
+      command: grub2-mkconfig -o /boot/grub2/grub.cfg
