@@ -1,0 +1,7 @@
+---
+- name: Перезагрузка хостов
+  hosts: all
+  become: yes
+  tasks:
+    - name: Перезагрузка хоста
+      reboot:
