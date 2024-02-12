@@ -22,16 +22,10 @@
     - name: Применение параметров sysctl
       command: sysctl -p /etc/sysctl.d/77-fstek.conf
 
-#    - name: Добавление параметров в файл /etc/default/grub
-#      lineinfile:
-#        path: /etc/default/grub
-#        line: 'GRUB_CMDLINE_LINUX_DEFAULT="vsyscall=none tsx=off init_on_alloc=1 slab_nomerge iommu=force iommu.strict=1 iommu.passthrough=0 mitigations=auto,nosmt debugfs=no-mount"'
-#        backrefs: yes
-#        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT="(.*)"$'
-#        state: present
     - name: Добавление параметров в файл /etc/default/grub
       lineinfile:
         path: /etc/default/grub
+        regexp: '^GRUB_CMDLINE_LINUX_DEFAULT='
         line: 'GRUB_CMDLINE_LINUX_DEFAULT="vsyscall=none tsx=off init_on_alloc=1 slab_nomerge iommu=force iommu.strict=1 iommu.passthrough=0 mitigations=auto,nosmt debugfs=no-mount"'
         state: present
 
